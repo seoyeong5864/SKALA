@@ -1,4 +1,7 @@
 <script setup>
+import { computed } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
+
 import BaseDashboardCard from './BaseDashboardCard.vue'
 
 const props = defineProps({
@@ -9,6 +12,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select-card', 'show-detail'])
+
+// 날씨 단위 변경 적용
+const configStore = useConfigStore()
+
+const displayTemp = computed(() => {
+    const rawTemp = props.weather.temp
+    if(configStore.unit === 'fahrenheit'){
+      return Math.round((rawTemp * 9/5) + 32)
+    }
+    return rawTemp
+})
 
 const selectCard = () => {
   emit('select-card', props.weather)
@@ -22,9 +36,10 @@ const showDetail = () => {
 <template>
   <BaseDashboardCard class="weather-card" @click="selectCard">
     <h2>{{ weather.name }}({{ weather.status }})</h2>
-    <p class="temperature">{{ weather.temp }}℃</p>
-    <p v-if="weather.temp >= 25" class="badge hot">🔥 더움 (25도 이상)</p>
-    <p v-else class="badge cool">🍃 선선함(25도 미만)</p>
+    <p class="temperature">{{ displayTemp }}{{ configStore.unitSymbol }}</p>
+    <p v-if="weather.temp >= 25" class="badge hot">🔥 더움</p>
+    <p v-else-if="weather.temp >= 20" class="badge normal">🌤️ 보통</p>
+    <p v-else class="badge cool">🍃 선선함</p>
     <button type="button" class="detail-button" @click.stop="showDetail">상세보기</button>
   </BaseDashboardCard>
 </template>
@@ -70,6 +85,10 @@ const showDetail = () => {
 
 .badge.hot {
   background-color: #ff7676;
+}
+
+.badge.normal {
+  background-color: #f59e0b;
 }
 
 .badge.cool {

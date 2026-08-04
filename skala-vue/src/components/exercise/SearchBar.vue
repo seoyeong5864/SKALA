@@ -1,7 +1,8 @@
 <script setup>
+import { computed } from 'vue'
 import BaseDashboardCard from './BaseDashboardCard.vue'
 
-defineProps({
+const props = defineProps({
   searchText: {
     type: String,
     required: true,
@@ -10,19 +11,19 @@ defineProps({
 
 const emit = defineEmits(['update-search-text'])
 
-const handleInput = (event) => {
-  emit('update-search-text', event.target.value)
-}
+const searchTextModel = computed({
+  get: () => props.searchText,
+  set: (value) => emit('update-search-text', value),
+})
 </script>
 
 <template>
   <BaseDashboardCard class="search-box">
     <h3>🔎 도시 검색</h3>
     <input
-      :value="searchText"
+      v-model.trim.lazy="searchTextModel"
       type="search"
       placeholder="도시 이름을 입력해주세요."
-      @input="handleInput"
     />
     <p>검색 중인 도시: {{ searchText }}</p>
   </BaseDashboardCard>

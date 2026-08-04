@@ -1,7 +1,13 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
-import SearchBar from './SearchBar.vue'
-import WeatherCard from './WeatherCard.vue'
+import { useRouter } from 'vue-router'
+
+import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
+import SearchBar from '../components/exercise/SearchBar.vue'
+import WeatherCard from '../components/exercise/WeatherCard.vue'
+import AxiosWeather from '@/components/practices/library/AxiosWeather.vue'
+
+const router = useRouter()
 
 const searchText = ref('')
 const selectedCityInfo = ref('도시를 선택해주세요.')
@@ -28,7 +34,7 @@ const handleSelectedCard = (weather) => {
 }
 
 const handleShowDetail = (weather) => {
-  window.alert(`${weather.name}의 현재 날씨는 [${weather.status}] 상태입니다.`)
+  router.push(`/weather/${weather.id}`)
 }
 
 // 반응형 변수 변화 감시
@@ -45,12 +51,10 @@ watchEffect(() => {
 
 <template>
   <main class="weather-parent">
-    <h1>날씨 Mockup</h1>
-
     <SearchBar :search-text="searchText" @update-search-text="handleSearchTextUpdate" />
 
     <div>
-      <section class="card-list">
+      <BaseDashboardCard class="card-list">
         <h3>🏙️ 지역별 날씨 현황</h3>
         <WeatherCard
           v-for="weather in filteredWeatherList"
@@ -59,7 +63,7 @@ watchEffect(() => {
           @select-card="handleSelectedCard"
           @show-detail="handleShowDetail"
         />
-      </section>
+      </BaseDashboardCard>
       <p v-if="searchText && filteredWeatherList.length === 0">
         검색어와 일치하는 도시가 없습니다.
       </p>
@@ -67,6 +71,11 @@ watchEffect(() => {
 
     <div class="status-bar">
       {{ selectedCityInfo }}
+    </div>
+
+    <div style="margin-bottom: 36px;">
+        <h2>API 연결 확인용</h2>
+        <AxiosWeather />
     </div>
   </main>
 </template>
@@ -81,9 +90,6 @@ watchEffect(() => {
   grid-template-columns: 1fr;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  background-color: #ffffff;
 }
 
 .status-bar {
@@ -92,6 +98,7 @@ watchEffect(() => {
   justify-content: center;
   min-height: 56px;
   margin-top: 24px;
+  margin-bottom: 24px;
   padding: 12px 20px;
   border: 1px solid #cbd5e1;
   border-radius: 12px;
