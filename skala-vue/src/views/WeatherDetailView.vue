@@ -9,11 +9,11 @@ const router = useRouter()
 const configStore = useConfigStore()
 
 // 실시간 날씨 API 연동 준비
-const cityMapping = {
-    city_01: { english: 'Seoul', korean: '대한민국 서울특별시'},
-    city_02: { english: 'Suwon', korean: '경기도 수원시 영통구'},
-    city_03: { english: 'Busan', korean: '부산광역시 해운대구'},
-}
+// const cityMapping = {
+//     city_01: { english: 'Seoul', korean: '대한민국 서울특별시'},
+//     city_02: { english: 'Suwon', korean: '경기도 수원시 영통구'},
+//     city_03: { english: 'Busan', korean: '부산광역시 해운대구'},
+// }
 
 
 const mockDetails = {
