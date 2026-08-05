@@ -128,7 +128,10 @@ const displayTemp = computed(() => {
 
     <div v-else class="state-message">해당 지역의 상세 데이터 정보가 존재하지 않습니다.</div>
 
-    <button class="back-btn" @click="router.push('/')">← 메인 대시보드로 돌아가기</button>
+    <!-- <button class="back-btn" @click="router.push('/')">← 메인 대시보드로 돌아가기</button> -->
+    <div class="back-btn">
+      <el-button @click="router.push('/')" round color="#2563eb">← 대시보드로 돌아가기</el-button>
+    </div>
   </main>
 </template>
 
@@ -224,7 +227,7 @@ const displayTemp = computed(() => {
   text-align: center;
 }
 
-.back-btn {
+/* .back-btn {
   margin-top: 20px;
   padding: 10px 20px;
   border: none;
@@ -233,11 +236,15 @@ const displayTemp = computed(() => {
   color: white;
   font-weight: 600;
   cursor: pointer;
+} */
+
+.back-btn {
+  margin-top: 20px;
 }
 
-.back-btn:hover {
+/* .back-btn:hover {
   background-color: #1d4ed8;
-}
+} */
 
 @media (max-width: 640px) {
   .detail-header h1 {

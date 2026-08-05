@@ -103,7 +103,10 @@ const handleShowDetail = (weather) => {
 
     <div>
       <BaseDashboardCard class="card-list">
-        <h3>🏙️ 지역별 날씨 현황</h3>
+        <template #header>
+          <h2>🏙️ 지역별 날씨 현황</h2>
+        </template>
+
         <p v-if="isLoading" class="loading-message">⛅ 날씨 정보를 불러오는 중입니다...</p>
         <template v-else>
           <WeatherCard
@@ -161,5 +164,11 @@ const handleShowDetail = (weather) => {
   border-radius: 12px;
   background-color: #f8fafc;
   text-align: center;
+}
+
+.card-list h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
 }
 </style>

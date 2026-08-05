@@ -17,11 +17,11 @@ const emit = defineEmits(['select-card', 'show-detail'])
 const configStore = useConfigStore()
 
 const displayTemp = computed(() => {
-    const rawTemp = props.weather.temp
-    if(configStore.unit === 'fahrenheit'){
-      return Math.round((rawTemp * 9/5) + 32)
-    }
-    return rawTemp
+  const rawTemp = props.weather.temp
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
 })
 
 const selectCard = () => {
@@ -35,13 +35,19 @@ const showDetail = () => {
 
 <template>
   <BaseDashboardCard class="weather-card" @click="selectCard">
-    <p class="city-name">{{ weather.name }}</p>
+    <template #header>
+      <p class="city-name">{{ weather.name }}</p>
+    </template>
+
     <p>{{ weather.status }}</p>
     <p class="temperature">{{ displayTemp }}{{ configStore.unitSymbol }}</p>
     <p v-if="weather.temp >= 25" class="badge hot">🔥 더움</p>
     <p v-else-if="weather.temp >= 20" class="badge normal">🌤️ 보통</p>
     <p v-else class="badge cool">🍃 선선함</p>
-    <button type="button" class="detail-button" @click.stop="showDetail">상세보기</button>
+
+    <template #footer>
+      <button type="button" class="detail-button" @click.stop="showDetail">상세보기</button>
+    </template>
   </BaseDashboardCard>
 </template>
 

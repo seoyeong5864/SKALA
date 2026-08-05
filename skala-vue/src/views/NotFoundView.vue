@@ -6,9 +6,12 @@ const router = useRouter()
 
 <template>
   <div class="not-found">
-    <h1>404 Not Found</h1>
-    <p>요청하신 페이지를 찾을 수 없습니다.</p>
-    <button class="back-btn" @click="router.push('/')">← 메인 대시보드로 돌아가기</button>
+    <div class="info-message">
+      <h1>404 Not Found</h1>
+      <p>요청하신 페이지를 찾을 수 없습니다.</p>
+    </div>
+    <!-- <button class="back-btn" @click="router.push('/')">← 메인 대시보드로 돌아가기</button> -->
+    <el-button @click="router.push('/')" round color="#2563eb">← 대시보드로 돌아가기</el-button>
   </div>
 </template>
 
@@ -35,5 +38,9 @@ h1 {
   color: white;
   font-weight: 600;
   cursor: pointer;
+}
+
+.info-message {
+  margin-bottom: 20px;
 }
 </style>

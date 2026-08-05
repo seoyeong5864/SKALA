@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import BaseDashboardCard from './BaseDashboardCard.vue'
+import { Search } from '@element-plus/icons-vue'
 
 const props = defineProps({
   searchQuery: {
@@ -19,12 +20,22 @@ const searchQueryModel = computed({
 
 <template>
   <BaseDashboardCard class="search-box">
-    <h3>🔎 도시 검색</h3>
-    <input
+    <template #header>
+      <h2>🔎 도시 검색</h2>
+    </template>
+
+    <!-- <input
       v-model.trim.lazy="searchQueryModel"
       type="search"
       placeholder="도시 이름을 입력해주세요."
-    />
+    /> -->
+    <el-input
+      v-model.trim.lazy="searchQueryModel"
+      placeholder="도시 이름을 입력해주세요"
+      class="search-input"
+      :prefix-icon="Search"
+    >
+    </el-input>
     <p>검색 중인 도시: {{ searchQuery }}</p>
   </BaseDashboardCard>
 </template>
@@ -47,5 +58,11 @@ const searchQueryModel = computed({
 .search-box input:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
+}
+
+.search-box h2 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
 }
 </style>
