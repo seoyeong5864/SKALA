@@ -9,19 +9,23 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  isFavorite: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['select-card', 'show-detail'])
+const emit = defineEmits(['select-card', 'show-detail', 'toggle-favorite'])
 
 // 날씨 단위 변경 적용
 const configStore = useConfigStore()
 
 const displayTemp = computed(() => {
   const rawTemp = props.weather.temp
-  if (configStore.unit === 'fahrenheit') {
-    return Math.round((rawTemp * 9) / 5 + 32)
-  }
-  return rawTemp
+  const convertedTemp =
+    configStore.unit === 'fahrenheit' ? (rawTemp * 9) / 5 + 32 : rawTemp
+
+  return convertedTemp.toFixed(1)
 })
 
 const selectCard = () => {
@@ -31,15 +35,35 @@ const selectCard = () => {
 const showDetail = () => {
   emit('show-detail', props.weather)
 }
+
+const toggleFavorite = () => {
+  emit('toggle-favorite', props.weather)
+}
 </script>
 
 <template>
-  <BaseDashboardCard class="weather-card" @click="selectCard">
+  <BaseDashboardCard
+    class="weather-card"
+    :class="{ 'is-favorite': isFavorite }"
+    @click="selectCard"
+  >
     <template #header>
       <p class="city-name">{{ weather.name }}</p>
     </template>
 
-    <p>{{ weather.status }}</p>
+    <button
+      type="button"
+      class="favorite-button"
+      :class="{ active: isFavorite }"
+      :aria-label="isFavorite ? `${weather.name} 즐겨찾기 해제` : `${weather.name} 즐겨찾기 추가`"
+      :aria-pressed="isFavorite"
+      :title="isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'"
+      @click.stop="toggleFavorite"
+    >
+      {{ isFavorite ? '★' : '☆' }}
+    </button>
+
+    <p class="status">{{ weather.status }}</p>
     <p class="temperature">{{ displayTemp }}{{ configStore.unitSymbol }}</p>
     <p v-if="weather.temp >= 25" class="badge hot">🔥 더움</p>
     <p v-else-if="weather.temp >= 20" class="badge normal">🌤️ 보통</p>
@@ -54,27 +78,59 @@ const showDetail = () => {
 <style scoped>
 .weather-card {
   position: relative;
-  padding: 56px 20px 20px;
+  display: flex;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  flex-direction: column;
+  padding: 80px 20px 20px;
   box-shadow: 0 4px 12px rgb(15 23 42 / 8%);
   text-align: center;
+}
+
+.weather-card :deep(.base-dashboard-card__footer) {
+  margin-top: auto;
 }
 
 .weather-card .city-name {
   font-weight: 700;
   margin: 0;
-  font-size: 32px;
+  font-size: 40px;
+  line-height: 1.25;
 }
 
 .temperature {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   color: #2563eb;
-  font-size: 32px;
+  font-size: 44px;
   font-weight: 700;
 }
 
 .status {
-  margin: 0;
+  margin: 12px 0 0;
   color: #64748b;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: #94a3b8;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.favorite-button.active {
+  color: #f5e20b;
 }
 
 .badge {
@@ -109,7 +165,7 @@ const showDetail = () => {
   padding: 10px 14px;
   border: none;
   border-radius: 8px;
-  background-color: #2563eb;
+  background-color: #c5cad1;
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -117,6 +173,6 @@ const showDetail = () => {
 }
 
 .detail-button:hover {
-  background-color: #1d4ed8;
+  background-color: #2563eb;
 }
 </style>

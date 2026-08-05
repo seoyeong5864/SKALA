@@ -28,10 +28,11 @@ header {
 .navbar {
   display: flex;
   width: 100%;
-  max-width: 760px;
+  max-width: 1120px;
   align-items: center;
   justify-content: space-between;
   margin: 2rem auto;
+  padding: 0 24px;
 }
 
 .logo {
@@ -46,8 +47,9 @@ nav {
 
 .page-content {
   width: 100%;
-  max-width: 760px;
+  max-width: 1120px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .navbar a {
@@ -68,5 +70,19 @@ nav {
 
 .navbar a:first-of-type {
   border: 0;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .navbar,
+  .page-content {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 }
 </style>

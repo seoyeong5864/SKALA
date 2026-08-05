@@ -1,7 +1,6 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import BaseDashboardCard from './BaseDashboardCard.vue'
-import { Search } from '@element-plus/icons-vue'
 
 const props = defineProps({
   searchQuery: {
@@ -16,27 +15,51 @@ const searchQueryModel = computed({
   get: () => props.searchQuery,
   set: (value) => emit('update-search-query', value),
 })
+
+const debouncedSearchQuery = ref(props.searchQuery)
+let debounceTimer
+
+// debounce 적용
+watch(
+  () => props.searchQuery,
+  (value) => {
+    clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => {
+      debouncedSearchQuery.value = value
+    }, 300)
+  },
+)
+
+onBeforeUnmount(() => {
+  clearTimeout(debounceTimer)
+})
 </script>
 
 <template>
   <BaseDashboardCard class="search-box">
-    <template #header>
-      <h2>🔎 도시 검색</h2>
-    </template>
-
+    <h2>🔎 도시 검색</h2>
+    <!-- lazy 적용 확인 > 이벤트 발생시 갱신 -->
+    <!-- (예) 입력창 밖 클릭, 포커스 이동 등 -->
     <!-- <input
       v-model.trim.lazy="searchQueryModel"
       type="search"
       placeholder="도시 이름을 입력해주세요."
     /> -->
-    <el-input
-      v-model.trim.lazy="searchQueryModel"
+
+    <!-- <el-input
+      v-model="searchQueryModel"
       placeholder="도시 이름을 입력해주세요"
       class="search-input"
       :prefix-icon="Search"
     >
-    </el-input>
-    <p>검색 중인 도시: {{ searchQuery }}</p>
+    </el-input> -->
+    <input
+      :value="searchQueryModel"
+      type="search"
+      placeholder="도시 이름을 입력해주세요."
+      @input="$emit('update-search-query', $event.target.value)"
+    />
+    <p>검색 중인 도시: {{ debouncedSearchQuery }}</p>
   </BaseDashboardCard>
 </template>
 
@@ -53,11 +76,6 @@ const searchQueryModel = computed({
   border-radius: 10px;
   font-size: 16px;
   outline: none;
-}
-
-.search-box input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
 }
 
 .search-box h2 {
