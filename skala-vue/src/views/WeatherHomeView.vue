@@ -1,12 +1,11 @@
 <script setup>
-import { computed, ref, watch, watchEffect, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 
 import BaseDashboardCard from '../components/exercise/BaseDashboardCard.vue'
 import SearchBar from '../components/exercise/SearchBar.vue'
 import WeatherCard from '../components/exercise/WeatherCard.vue'
-import AxiosWeather from '@/components/practices/library/AxiosWeather.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -51,7 +50,7 @@ const fetchRealTimeWeather = async () => {
         status: busanRes.data.weather[0].description,
       },
     ]
-    console.log('🟢 [API 통신 완료] 메인 대시보드 실시간 기상 장부 동기화:', weatherList.value)
+    console.log('🟢 [API 통신 완료] 메인 대시보드 실시간 기상 정보 동기화:', weatherList.value)
   } catch (error) {
     console.error('🔴 날씨 API 연동 실패:', error)
   } finally {
@@ -61,10 +60,10 @@ const fetchRealTimeWeather = async () => {
 
 // 초기 마운트시 날씨 데이터 가져오기
 onMounted(() => {
-    if(route.query.search){
-        searchQuery.value = route.query.search
-    }
-    fetchRealTimeWeather()
+  if (route.query.search) {
+    searchQuery.value = route.query.search
+  }
+  fetchRealTimeWeather()
 })
 
 const filteredWeatherList = computed(() => {
@@ -105,15 +104,18 @@ const handleShowDetail = (weather) => {
     <div>
       <BaseDashboardCard class="card-list">
         <h3>🏙️ 지역별 날씨 현황</h3>
-        <WeatherCard
-          v-for="weather in filteredWeatherList"
-          :key="weather.id"
-          :weather="weather"
-          @select-card="handleSelectedCard"
-          @show-detail="handleShowDetail"
-        />
+        <p v-if="isLoading" class="loading-message">⛅ 날씨 정보를 불러오는 중입니다...</p>
+        <template v-else>
+          <WeatherCard
+            v-for="weather in filteredWeatherList"
+            :key="weather.id"
+            :weather="weather"
+            @select-card="handleSelectedCard"
+            @show-detail="handleShowDetail"
+          />
+        </template>
       </BaseDashboardCard>
-      <p v-if="searchQuery && filteredWeatherList.length === 0">
+      <p v-if="!isLoading && searchQuery && filteredWeatherList.length === 0">
         검색어와 일치하는 도시가 없습니다.
       </p>
     </div>
@@ -139,6 +141,12 @@ const handleShowDetail = (weather) => {
   grid-template-columns: 1fr;
   gap: 16px;
   padding: 20px;
+}
+
+.loading-message {
+  padding: 32px 20px;
+  color: #64748b;
+  text-align: center;
 }
 
 .status-bar {

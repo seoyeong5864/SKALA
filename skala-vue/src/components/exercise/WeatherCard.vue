@@ -35,7 +35,8 @@ const showDetail = () => {
 
 <template>
   <BaseDashboardCard class="weather-card" @click="selectCard">
-    <h2>{{ weather.name }}({{ weather.status }})</h2>
+    <p class="city-name">{{ weather.name }}</p>
+    <p>{{ weather.status }}</p>
     <p class="temperature">{{ displayTemp }}{{ configStore.unitSymbol }}</p>
     <p v-if="weather.temp >= 25" class="badge hot">🔥 더움</p>
     <p v-else-if="weather.temp >= 20" class="badge normal">🌤️ 보통</p>
@@ -52,13 +53,14 @@ const showDetail = () => {
   text-align: center;
 }
 
-.weather-card h2 {
+.weather-card .city-name {
+  font-weight: 700;
   margin: 0;
-  font-size: 20px;
+  font-size: 32px;
 }
 
 .temperature {
-  margin: 14px 0 6px;
+  margin: 8px 0 0;
   color: #2563eb;
   font-size: 32px;
   font-weight: 700;
