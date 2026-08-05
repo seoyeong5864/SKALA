@@ -9,10 +9,12 @@ import WeatherCard from '../components/exercise/WeatherCard.vue'
 import { useWeatherSearch } from '@/composables/useWeatherSearch'
 import { cities } from '@/data/cities'
 import { useFavoriteStore } from '@/stores/favoriteStore'
+import { normalizeWeatherStatus } from '@/utils/weather'
 
 const router = useRouter()
 const route = useRoute()
 const favoriteStore = useFavoriteStore()
+const favoriteCityIdsForSorting = new Set(favoriteStore.favoriteCityIds)
 
 // 실시간 날씨 API 연동 준비
 const selectedCityInfo = ref('카드를 클릭하거나 검색해보세요.')
@@ -28,8 +30,8 @@ const {
 const sortedWeatherList = computed(() =>
   [...filteredWeatherList.value].sort(
     (firstWeather, secondWeather) =>
-      Number(favoriteStore.isFavorite(secondWeather.id)) -
-      Number(favoriteStore.isFavorite(firstWeather.id)),
+      Number(favoriteCityIdsForSorting.has(secondWeather.id)) -
+      Number(favoriteCityIdsForSorting.has(firstWeather.id)),
   ),
 )
 
@@ -87,10 +89,9 @@ const fetchRealTimeWeather = async () => {
       id: cities[index].id,
       name: cities[index].name,
       temp: response.data.main.temp,
-      status: response.data.weather[0].description,
+      status: normalizeWeatherStatus(response.data.weather[0].id),
     }))
 
-    console.log('🟢 [API 통신 완료] 메인 대시보드 실시간 기상 정보 동기화:', weatherList.value)
   } catch (error) {
     console.error('🔴 날씨 API 연동 실패:', error)
   } finally {
@@ -130,6 +131,9 @@ const handleToggleFavorite = (weather) => {
       <BaseDashboardCard class="card-list">
         <template #header>
           <h2>🏙️ 지역별 날씨 현황</h2>
+          <p class="weather-description">
+            자주 확인하는 도시를 즐겨찾기 해두고 날씨를 빠르게 확인해보세요.
+          </p>
         </template>
 
         <p v-if="isLoading" class="loading-message">⛅ 날씨 정보를 불러오는 중입니다...</p>
@@ -201,9 +205,15 @@ const handleToggleFavorite = (weather) => {
 }
 
 .card-list h2 {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: 24px;
   font-weight: 700;
+}
+
+.weather-description {
+  margin: 6px 0 12px;
+  color: #64748b;
+  font-size: 14px;
 }
 
 @media (max-width: 900px) {

@@ -2,44 +2,70 @@
 import { useConfigStore } from '@/stores/configStore'
 
 const configStore = useConfigStore()
+
+const selectUnit = (unit) => {
+  if (configStore.unit !== unit) {
+    configStore.toggleUnit()
+  }
+}
 </script>
 
 <template>
-  <div
-    style="
-      text-align: center;
-      margin-left: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    "
-  >
-    <span
-      >날씨단위: <strong>{{ configStore.unit === 'celsius' ? '섭씨(℃)' : '화씨(℉)' }}</strong></span
+  <div class="unit-toggle" role="group" aria-label="날씨 단위 변경">
+    <button
+      type="button"
+      class="unit-option"
+      :class="{ active: configStore.unit === 'celsius' }"
+      :aria-pressed="configStore.unit === 'celsius'"
+      @click="selectUnit('celsius')"
     >
-    <!-- <button @click="configStore.toggleUnit" class="toggle-btn">단위변경</button> -->
-    <el-button @click="configStore.toggleUnit" round color="#2563eb">단위변경</el-button>
+      °C
+    </button>
+    <button
+      type="button"
+      class="unit-option"
+      :class="{ active: configStore.unit === 'fahrenheit' }"
+      :aria-pressed="configStore.unit === 'fahrenheit'"
+      @click="selectUnit('fahrenheit')"
+    >
+      °F
+    </button>
   </div>
 </template>
 
 <style scoped>
-.toggle-btn {
-  padding: 6px 10px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 6px;
+.unit-toggle {
+  display: inline-grid;
+  overflow: hidden;
+  grid-template-columns: repeat(2, 1fr);
+  margin-left: auto;
+  padding: 2px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background-color: #e5e7eb;
+}
+
+.unit-option {
+  width: 46px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-color: transparent;
+  color: #64748b;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 14px;
+  line-height: 1;
 }
 
-.toggle-btn:hover {
-  background-color: #1d4ed8;
+.unit-option.active {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
 }
 
-el-button {
-  font-weight: bold;
-  background-color: #2563eb;
-  color: white;
+.unit-option:focus-visible {
+  outline: 2px solid rgb(37, 99, 235);
+  outline-offset: 2px;
 }
 </style>

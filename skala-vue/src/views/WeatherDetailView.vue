@@ -5,6 +5,7 @@ import { useConfigStore } from '@/stores/configStore'
 import { cityMap } from '@/data/cities'
 import axios from 'axios'
 import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
+import { normalizeWeatherStatus } from '@/utils/weather'
 
 const route = useRoute()
 const router = useRouter()
@@ -57,7 +58,7 @@ onMounted(async () => {
       // name: cityInfo.korean,
       name: cityInfo.detailName,
       temp: data.main.temp,
-      status: data.weather[0].description,
+      status: normalizeWeatherStatus(data.weather[0].id),
       humidity: `${data.main.humidity}%`,
       wind: `${data.wind.speed}m/s`,
     }

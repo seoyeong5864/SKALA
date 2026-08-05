@@ -38,6 +38,7 @@ onBeforeUnmount(() => {
 <template>
   <BaseDashboardCard class="search-box">
     <h2>🔎 도시 검색</h2>
+    <p class="search-description">우리나라 및 세계 주요 도시의 실시간 날씨를 검색해보세요.</p>
     <!-- lazy 적용 확인 > 이벤트 발생시 갱신 -->
     <!-- (예) 입력창 밖 클릭, 포커스 이동 등 -->
     <!-- <input
@@ -76,11 +77,18 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   font-size: 16px;
   outline: none;
+  margin-bottom: 12px;
 }
 
 .search-box h2 {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: 24px;
   font-weight: 700;
+}
+
+.search-description {
+  margin: 6px 0 6px;
+  color: #64748b;
+  font-size: 14px;
 }
 </style>

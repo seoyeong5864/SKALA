@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
+import { getWeatherImage } from '@/utils/weatherImages'
 
 import BaseDashboardCard from './BaseDashboardCard.vue'
 
@@ -28,6 +29,10 @@ const displayTemp = computed(() => {
   return convertedTemp.toFixed(1)
 })
 
+const weatherCardStyle = computed(() => ({
+  backgroundImage: `linear-gradient(rgb(255 255 255 / 62%), rgb(255 255 255 / 62%)), url("${getWeatherImage(props.weather.status)}")`,
+}))
+
 const selectCard = () => {
   emit('select-card', props.weather)
 }
@@ -45,6 +50,7 @@ const toggleFavorite = () => {
   <BaseDashboardCard
     class="weather-card"
     :class="{ 'is-favorite': isFavorite }"
+    :style="weatherCardStyle"
     @click="selectCard"
   >
     <template #header>
@@ -60,7 +66,7 @@ const toggleFavorite = () => {
       :title="isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'"
       @click.stop="toggleFavorite"
     >
-      {{ isFavorite ? '★' : '☆' }}
+      <span class="favorite-icon" aria-hidden="true"></span>
     </button>
 
     <p class="status">{{ weather.status }}</p>
@@ -83,6 +89,9 @@ const toggleFavorite = () => {
   aspect-ratio: 1 / 1;
   flex-direction: column;
   padding: 80px 20px 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: 0 4px 12px rgb(15 23 42 / 8%);
   text-align: center;
 }
@@ -94,18 +103,20 @@ const toggleFavorite = () => {
 .weather-card .city-name {
   font-weight: 700;
   margin: 0;
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1.25;
 }
 
 .temperature {
   margin: 4px 0 0;
-  color: #2563eb;
-  font-size: 44px;
-  font-weight: 700;
+  color: #f8fafc;
+  font-size: 48px;
+  font-weight: 300;
+  text-shadow: 0 2px 8px rgb(15 23 42 / 38%);
 }
 
 .status {
+  font-size: 16px;
   margin: 12px 0 0;
   color: #64748b;
 }
@@ -131,6 +142,19 @@ const toggleFavorite = () => {
 
 .favorite-button.active {
   color: #f5e20b;
+}
+
+.favorite-icon::before {
+  content: '☆';
+}
+
+.favorite-button.active .favorite-icon::before {
+  content: '★';
+}
+
+.favorite-button:not(.active):hover .favorite-icon::before {
+  color: rgb(245 226 11 / 55%);
+  content: '★';
 }
 
 .badge {
