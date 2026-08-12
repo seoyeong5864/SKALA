@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: myapp
+  properties:
+    active: local
