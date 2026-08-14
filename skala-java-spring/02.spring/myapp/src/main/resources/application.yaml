@@ -3,3 +3,9 @@ spring:
     name: myapp
   properties:
     active: local
+
+
+logging:
+  level:
+    '[com.sk.skala.myapp.controller]' : DEBUG
+    '[com.sk.skala.myapp.service]' : DEBUG
