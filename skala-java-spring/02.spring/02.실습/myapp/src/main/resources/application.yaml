@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: myapp
+  profiles:
+    active: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, metrics, loggers
+
+logging:
+  level:
+    '[com.sk.skala.myapp.controller]': DEBUG
+    '[com.sk.skala.myapp.service]': DEBUG
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    display-request-duration: true
+    try-it-out-enabled: true
+  show-actuator: false
