@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: helpdesk
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.2
+
+helpdesk:
+  rag:
+    top-k: 5
+    threshold: 0.62
+  memory:
+    max: 20
