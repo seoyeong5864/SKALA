@@ -1,5 +1,5 @@
 package com.skala.helpdesk.eval;
 
-public class GoldenSet {
-    
-}
+import java.util.List;
+
+public record GoldenSet(String q, List<String> must, String src) {}

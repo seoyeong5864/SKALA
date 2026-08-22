@@ -1,6 +1,11 @@
 spring:
   application:
     name: helpdesk
+  datasource:
+    url: jdbc:h2:file:./data/helpdesk
+  sql:
+    init:
+      mode: always
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
@@ -8,6 +13,18 @@ spring:
         options:
           model: gpt-4o-mini
           temperature: 0.2
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+            schema: classpath:chat-memory-schema.sql # conversationId(tenant:user:session)는 기본 VARCHAR(36)를 넘는다
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics
 
 helpdesk:
   rag:
@@ -15,3 +32,6 @@ helpdesk:
     threshold: 0.62
   memory:
     max: 20
+  chat:
+    max-question-length: 2000
+    max-tool-calls-per-conversation: 5
