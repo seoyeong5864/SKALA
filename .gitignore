@@ -56,3 +56,8 @@ tmp/
 *.db
 *.sqlite
 *.sqlite3
+
+# Large archive files
+*.tar
+*.tar.gz
+*.part*
