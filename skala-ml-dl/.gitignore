@@ -1,6 +1,10 @@
-# 모델 가중치 / 체크포인트 (노트북 실행 시 재생성됨)
+# 모델 가중치 / 체크포인트 (노트북 실행 시 재생성)
 weights_ablation/
 weights_report/
 *.pt
 *.pth
 *.ckpt
+
+# 데이터셋 (코드 실행 시 자동 다운로드)
+data/
+!data/.gitkeep
