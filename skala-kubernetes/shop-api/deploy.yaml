@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shop-p254
+  name: shop-p254
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shop-p254
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: shop-p254
+    spec:
+      containers:
+      - image: skala-registry.skala-ai.com/class-8/shop-p254:1.0.0
+        name: shop-p254
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
